@@ -1,0 +1,11 @@
+# Ignored folders
+.build/
+
+# Ignored files
+*.DS_Store
+*.run
+*.a
+*.so
+*.so
+*.zip
+*.bak
