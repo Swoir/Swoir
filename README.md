@@ -16,6 +16,7 @@ To use `Swoir` in your project, add the following to your `Package.swift` depend
 ```swift
 let package = Package(
     name: "YourSwiftProject",
+    platforms: [ .macOS(.v10_15), .iOS(.v14) ],
     // ...
     dependencies: [
         .package(url: "https://github.com/Swoir/Swoir.git", exact: "0.19.4-1")
@@ -30,10 +31,12 @@ let package = Package(
 ## Usage
 
 ```swift
+import Foundation
 import Swoir
+import Swoirenberg
 
 let swoir = Swoir(backend: Swoirenberg.self)
-let manifest = Bundle.module.url(forResource: "x_not_eq_y.json", withExtension: nil)!
+let manifest = URL(fileURLWithPath: "x_not_eq_y.json")
 let circuit = try swoir.createCircuit(manifest: manifest)
 
 let proof = try circuit.prove([ "x": 1, "y": 2 ])
@@ -41,6 +44,8 @@ let verified = try circuit.verify(proof)
 
 print(verified ? "Verified!" : "Failed to verify")
 ```
+
+Ensure [x_not_eq_y.json](./Tests/SwoirTests/Fixtures/contracts/x_not_eq_y/target/x_not_eq_y.json) exists in the project root.
 
 ## Architectures
 
