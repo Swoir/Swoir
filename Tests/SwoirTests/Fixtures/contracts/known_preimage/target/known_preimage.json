@@ -1,1 +1,42 @@
-{"noir_version":"0.19.4+4d133c50a50f21ca23861a9d1987207bd8783d36","hash":7205150791651550198,"backend":"acvm-backend-barretenberg","abi":{"parameters":[{"name":"preimage","type":{"kind":"array","length":13,"type":{"kind":"integer","sign":"unsigned","width":8}},"visibility":"private"},{"name":"hash","type":{"kind":"array","length":32,"type":{"kind":"integer","sign":"unsigned","width":8}},"visibility":"public"}],"param_witnesses":{"hash":[{"start":14,"end":46}],"preimage":[{"start":1,"end":14}]},"return_type":null,"return_witnesses":[]},"bytecode":"H4sIAAAAAAAA/9WZ107rUBBFTW7LLfReE3oNuMY2vXdyv4GI8P+fwGxxjgibR4aHOdKWtR7iZNkZl5lWEAT/g9fVI6m4bbWLK8TfiL8T/yD+SfyLuEr8m/gP8V/if8S9xH3E/cQDxIPEQ8TDxCPEo8RjxOPEE8STxFPE08QzxLPEc8Q14jrxPPEC8SLxEvEy8QrxKvEa8TrxBvEm8RZxw3H36nHbY7dNwmaadvK4EyXRYxiX7SIL06zdLKIiyorsKS6SpFOkRV62yzwsozTpRM9ZmTyHr2u7a1/h59YTfluvi/+t1eCtNny9+Trz9eXryteTj68fXze+Xnyd+PrYdue+7r53By6SSBLjGElSSSZpSnJJISklu5I9yb7kQHIoOXLH5ERyKjmTnEsuJJeSK8m15EZyK7mT3EseJK3g/aoon68+vfMV7ejtK/xK535F59CI84Cic2TEeVDROTbiPKTonBhxHlZ0To04jyg6Z0acRxWdm0acxxSdcyPO44rOhRHnCUXn0ojzpKLzrhHnKUXnPSPO04rO+0acZxSdD4w4zyo6HxpxnlN0PjLiXFN0PjbiXFd0PjHiPK/ofGrEeUHR+cyI86Ki87kR5yVF5wsjzsuKzpdGnFcUna+MOK8qOl8bcV5TdL4x4ryu6HxrxHlD0fnOiPOmovO9EectRecHI84NReeWonP3/B3OmLtj5o55O2btfs6O+Tpm65irY6aOz9XdZzFnxtwVc0jM5TCnwtwGcwz09dHnRt8XfVD0BdEnQ98IfRT0FfCeXXP7w3sJntPx3IrnODzX4D6P+x7uA7gu4jqBusH/qBF8XC/trlUJ4CMAAA=="}
+{
+  "noir_version": "0.30.0+af57471035e4fa7eaffa71693219df6d029dbcde",
+  "hash": 14040036644233647100,
+  "abi": {
+    "parameters": [
+      {
+        "name": "preimage",
+        "type": {
+          "kind": "array",
+          "length": 13,
+          "type": { "kind": "integer", "sign": "unsigned", "width": 8 }
+        },
+        "visibility": "private"
+      },
+      {
+        "name": "hash",
+        "type": {
+          "kind": "array",
+          "length": 32,
+          "type": { "kind": "integer", "sign": "unsigned", "width": 8 }
+        },
+        "visibility": "public"
+      }
+    ],
+    "param_witnesses": {
+      "hash": [{ "start": 13, "end": 45 }],
+      "preimage": [{ "start": 0, "end": 13 }]
+    },
+    "return_type": null,
+    "return_witnesses": [],
+    "error_types": {}
+  },
+  "bytecode": "H4sIAAAAAAAA/9Wa11LjQBBFLWB32WByTjY5GVC0JHLO1H4DLsz/fwJ9yzNVqvvAC81DT9Ut+bxM6UhqhWkHtd54kfx3vwNJv/s9WOGAuI+4n3iA+AfxT+JfxIPEv4n/EP8l/kdcJx4iHiYeIR4lHiMeJ54gniSeIp4mniGeJZ4jnideIF4kXiJuEDeJl4lXiFeJ14jXiTeIN4m3iLeJd4h3iVuOqyNw23O3TcJ2mnbzuBsl0WsYl50iC9Os0y6iIsqK7C0ukqRbpEVedso8LKM06UbvWZm8h72xV5kr/Np4w77hmqxX9tf7YOvrzdeGry9fV76efB35+Lrx9eLrxNfHnjvX+5IDeEgiSYzjI0klmaQtySWFpJQcSo4kx5ITyankzB2PC8ml5EpyLbmR3EruJPeSB8mj5EnyXOvdf6qjT/k81fXOU7SvN1f4nc5Dis4HRpyHFZ1DI84jis6REedRRefYiPOYonNixHlc0Tk14jyh6JwZcZ5UdG4bcZ5SdM6NOE8rOhdGnGcUnUsjzrOKzodGnOcUnY+MOM8rOh8bcV5QdD4x4ryo6HxqxHlJ0fnMiHND0fnciHNT0fnCiPOyovOlEecVRecrI86ris7XRpzXFJ1vjDivKzrfGnHeUHS+M+K8qeh8b8R5S9H5wYjztqLzoxHnHUXnJyPOu4rOz0acW4rOL4rO6LMPuLmqPfjAHQP/nxb029Fr93129NfRW0dfHT31ZmUO9GDRk0SPDj0r9HDQ08AaP9a8sQaMNVGsEWLNDGtIWFPBGgO+ufEN2nBz4p0d77B4p8M7Dp75eAbimYB7JO4ZqCFcU63aJ+MDt4IKJ/UjAAA=",
+  "debug_symbols": "ldU9DoJAEEDhu0xNIbo7o1zFGLMKGBKyEH5MDOHugobG2LxydvZVXzGT5MVtfFyrWDa9ZOdJ6uYehqqJyzSJ85+3vg1xHfshdINk5hIpYi5ZetjPiZRVXUjmdL4k4pQG9i9Ind8K1d/iiIsTLfwOFyku9rg44MLhwuNCcYHNPTb32FyxuWJzxeaKzRWbKzZXbK7YXLG5YnPD5obNDZsbNjdsbtjcsLlhc4Pmy/AMXRVudbHeq3U3xvt2vpZxeLXfzfL3DQ==",
+  "file_map": {
+    "46": {
+      "source": "fn main(preimage: [u8; 13], hash: pub [u8; 32]) {\n    let preimage_hash = dep::std::hash::keccak256(preimage, preimage.len() as u32);\n    assert(preimage_hash == hash);\n}\n\n#[test]\nfn test_main() {\n    let preimage: [u8; 13] = [0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x2c, 0x20, 0x77, 0x6f, 0x72, 0x6c, 0x64, 0x21];\n    let hash: [u8; 32] = [0xb6, 0xe1, 0x6d, 0x27, 0xac, 0x5a, 0xb4, 0x27, 0xa7, 0xf6, 0x89, 0x00, 0xac, 0x55, 0x59, 0xce, 0x27, 0x2d, 0xc6, 0xc3, 0x7c, 0x82, 0xb3, 0xe0, 0x52, 0x24, 0x6c, 0x82, 0x24, 0x4c, 0x50, 0xe4];\n    main(preimage, hash);\n}\n",
+      "path": "/Users/madztheo/Documents/Ocelots/libs/Swoir/Tests/SwoirTests/Fixtures/contracts/known_preimage/src/main.nr"
+    }
+  },
+  "names": ["main"]
+}

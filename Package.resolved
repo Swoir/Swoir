@@ -12,10 +12,10 @@
     {
       "identity" : "swoirenberg",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Swoir/Swoirenberg.git",
+      "location" : "https://github.com/madztheo/Swoirenberg.git",
       "state" : {
-        "revision" : "b86374b45d49a25e044ad4b962cba08e8aa03d3b",
-        "version" : "0.19.4-2"
+        "revision" : "3ac52e864fdba615aa624fe34ce850830fbc34c0",
+        "version" : "0.30.0-2"
       }
     }
   ],
