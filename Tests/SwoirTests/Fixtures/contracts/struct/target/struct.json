@@ -1,0 +1,37 @@
+{
+  "noir_version": "0.30.0+af57471035e4fa7eaffa71693219df6d029dbcde",
+  "hash": 5683043769037155048,
+  "abi": {
+    "parameters": [
+      {
+        "name": "factors",
+        "type": {
+          "kind": "struct",
+          "path": "Factors",
+          "fields": [
+            { "name": "a", "type": { "kind": "field" } },
+            { "name": "b", "type": { "kind": "field" } }
+          ]
+        },
+        "visibility": "private"
+      },
+      { "name": "result", "type": { "kind": "field" }, "visibility": "public" }
+    ],
+    "param_witnesses": {
+      "factors": [{ "start": 0, "end": 2 }],
+      "result": [{ "start": 2, "end": 3 }]
+    },
+    "return_type": null,
+    "return_witnesses": [],
+    "error_types": {}
+  },
+  "bytecode": "H4sIAAAAAAAA/62QQQ6AMAgErfFBUKCFm1+xsf3/E9TYxka96SQEwmGyWTecjPu44aLdc93wDWzOu5cgMOfoMxIu4C2pAEsKioqisnolysoaLVkEQ6aMRYxKFY//ZYQj29T10XfhXv4PNvD4VlxNAQAA",
+  "debug_symbols": "NYxbCoAgEEX3Mt99FEWBW4mIqTQEGcVHEOLeG4v+7rmvDIfc0rlqUjaAmDMYu2PUlpgytK8VHFKlENFHEF07NiDpYNVPpQGljQQxjGVhuNBr3Iys85ol2v83xni7L+HuAw==",
+  "file_map": {
+    "46": {
+      "source": "struct Factors {\n    a: Field,\n    b: Field,\n}\n\nfn main(factors: Factors, result: pub Field) {\n    assert(factors.a * factors.b == result);\n}\n\n#[test]\nfn test_main() {\n    main(Factors { a: 2, b: 5 }, 10);\n}\n",
+      "path": "/Users/madztheo/Documents/Ocelots/libs/Swoir/Tests/SwoirTests/Fixtures/contracts/struct/src/main.nr"
+    }
+  },
+  "names": ["main"]
+}

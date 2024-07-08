@@ -1,0 +1,7 @@
+[package]
+name = "multi_dimensions_array"
+type = "bin"
+authors = [""]
+compiler_version = ">=0.30.0"
+
+[dependencies]

@@ -43,7 +43,7 @@ public class Circuit {
     }
 
     public func prove(_ inputs: [String: Any]) throws -> Proof {
-        let witnessMap = try generateWitnessMap(inputs)
+        let witnessMap = try generateWitnessMap(inputs, self.manifest.abi.parameters)
         let proof = try backend.prove(bytecode: self.bytecode, witnessMap: witnessMap)
         return proof
     }
@@ -80,24 +80,71 @@ public class Circuit {
         else { return nil }
     }
 
-    func generateWitnessMap(_ inputs: [String: Any]) throws -> [WitnessMapValue] {
+    func flattenMultidimensionalArray(_ input: Any) -> [Any] {
+        var flattened: [Any] = []
+        if let input = input as? [Any] {
+            for element in input {
+                flattened.append(contentsOf: flattenMultidimensionalArray(element))
+            }
+        } else {
+            flattened.append(input)
+        }
+        return flattened
+    }
+
+    func computeTotalLengthOfArray(_ kind : ABI_ParameterType) -> Int {
+        switch kind {
+        case .kindArray(_, let length, let type):
+            return length * computeTotalLengthOfArray(type)
+        case .kindField:
+            return 1
+        case .kindInteger:
+            return 1
+        case .kindString(_, let length):
+            return length
+        case .kindStruct(_, _, let fields):
+            return fields.reduce(0) { $0 + computeTotalLengthOfArray($1.type) }
+        }
+    }
+
+    func generateWitnessMap(_ inputs: [String: Any], _ parameters: [ABI_Parameter]) throws -> [WitnessMapValue] {
         var witnessMap: [WitnessMapValue] = []
-        for param in self.manifest.abi.parameters {
+        for param in parameters {
             if !inputs.keys.contains(param.name) {
                 throw SwoirError.missingInput("Missing input: \(param.name)")
             }
             let input = inputs[param.name]
 
             switch param.type {
-            case .kindArray(_, let length, _):
-                guard let inputArray = inputArrayToWitnessMapValue(input as Any) else {
-                    throw SwoirError.invalidInput("Invalid array type for input \(param.name).")
+            case .kindArray(_, let length, let type ):
+                // Make sure any extradimensions are flattened
+                let input = flattenMultidimensionalArray(input!)
+                // And then compute the expected length of the flattened array
+                let totalLength = computeTotalLengthOfArray(param.type)
+                switch type {
+                case .kindString(_, let string_length):
+                    // Convert each String in the array into a UInt8 array
+                    for element in input as! [String] {
+                        guard let elementData = element.data(using: .utf8)?.map({ $0 as UInt8 }) else {
+                            throw SwoirError.invalidInput("Failed to convert input \(param.name) to UTF-8 data.")
+                        }
+                        guard let elementData = inputArrayToWitnessMapValue(elementData) else {
+                            throw SwoirError.invalidInput("Failed to convert input \(param.name) to WitnessMapValue.")
+                        }
+                        if elementData.count != string_length {
+                            throw SwoirError.invalidInput("Array length mismatch for input \(param.name). Input array length is \(elementData.count) but circuit expects \(length)")
+                        }
+                        witnessMap.append(contentsOf: elementData)
+                    }
+                default:
+                    guard let inputArray = inputArrayToWitnessMapValue(input as Any) else {
+                        throw SwoirError.invalidInput("Invalid array type for input \(param.name).")
+                    }
+                    if inputArray.count != totalLength {
+                        throw SwoirError.invalidInput("Array length mismatch for input \(param.name). Input array length is \(inputArray.count) but circuit expects \(length)")
+                    }
+                    witnessMap.append(contentsOf: inputArray)
                 }
-                if inputArray.count != length {
-                    throw SwoirError.invalidInput("Array length mismatch for input \(param.name). Input array length is \(inputArray.count) but circuit expects \(length)")
-                }
-                witnessMap.append(contentsOf: inputArray)
-
             case .kindField:
                 guard let input = inputToWitnessMapValue(input as Any) else {
                     throw SwoirError.invalidInput("Input \(param.name) must be an integer.")
@@ -109,6 +156,29 @@ public class Circuit {
                     throw SwoirError.invalidInput("Input \(param.name) must be an integer.")
                 }
                 witnessMap.append(input)
+
+            case .kindString(_, let length):
+                guard let input = input as? String else {
+                    throw SwoirError.invalidInput("Input \(param.name) must be a string.")
+                }
+                if input.count != length {
+                    throw SwoirError.invalidInput("String length mismatch for input \(param.name). Input string length is \(input.count) but circuit expects \(length)")
+                }
+                guard let input = input.data(using: .utf8)?.map({ $0 as UInt8 }) else {
+                    throw SwoirError.invalidInput("Failed to convert input \(param.name) to UTF-8 data.")
+                }
+                guard let input = inputArrayToWitnessMapValue(input) else {
+                    throw SwoirError.invalidInput("Failed to convert input \(param.name) to WitnessMapValue.")
+                }
+                witnessMap.append(contentsOf: input)
+
+            case .kindStruct(_, _, let fields):
+                guard let input = input as? [String: Any] else {
+                    throw SwoirError.invalidInput("Input \(param.name) must be a struct.")
+                }
+                let fieldWitnessMap = try generateWitnessMap(input, fields)
+                witnessMap.append(contentsOf: fieldWitnessMap)
+
             }
         }
         return witnessMap

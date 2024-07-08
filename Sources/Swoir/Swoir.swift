@@ -24,7 +24,7 @@ public struct ABI: Codable {
 public struct ABI_Parameter: Codable {
     let name: String
     let type: ABI_ParameterType
-    let visibility: String
+    let visibility: String?
 
     enum CodingKeys: String, CodingKey {
         case name = "name"
@@ -37,9 +37,11 @@ public indirect enum ABI_ParameterType: Codable {
     case kindInteger(kind: String, sign: String, width: Int)
     case kindArray(kind: String, length: Int, type: ABI_ParameterType)
     case kindField(kind: String)
+    case kindString(kind: String, length: Int)
+    case kindStruct(kind: String, path: String, fields: [ABI_Parameter])
 
     enum CodingKeys: CodingKey {
-        case kind, sign, width, length, type
+        case kind, sign, width, length, type, fields, path
     }
 
     public init(from decoder: Decoder) throws {
@@ -56,6 +58,13 @@ public indirect enum ABI_ParameterType: Codable {
             self = .kindArray(kind: kind, length: length, type: type)
         case "field":
             self = .kindField(kind: kind)
+        case "string":
+            let length = try container.decode(Int.self, forKey: .length)
+            self = .kindString(kind: kind, length: length)
+        case "struct":
+            let path = try container.decode(String.self, forKey: .path)
+            let fields =  try container.decode([ABI_Parameter].self, forKey: .fields)
+            self = .kindStruct(kind: kind, path: path, fields: fields)
         default:
             throw DecodingError.dataCorruptedError(forKey: .kind, in: container, debugDescription: "Unknown kind")
         }
@@ -74,6 +83,13 @@ public indirect enum ABI_ParameterType: Codable {
             try container.encode(type, forKey: .type)
         case .kindField(let kind):
             try container.encode(kind, forKey: .kind)
+        case .kindString(let kind, let length):
+            try container.encode(kind, forKey: .kind)
+            try container.encode(length, forKey: .length)
+        case .kindStruct(let kind, let path, let fields):
+            try container.encode(kind, forKey: .kind)
+            try container.encode(fields, forKey: .fields)
+            try container.encode(path, forKey: .path)
         }
     }
 }
@@ -82,6 +98,8 @@ public indirect enum Kind {
     case integer(sign: String, width: Int)
     case field
     case array(length: Int, type: ABI_ParameterType)
+    case string(length: Int)
+    case structType(fields: [ABI_Parameter])
 }
 
 public enum SwoirError: Error {

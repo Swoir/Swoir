@@ -40,8 +40,9 @@ final class SwoirTests: XCTestCase {
         let manifest = Bundle.module.url(forResource: "known_preimage.json", withExtension: nil)!
         let circuit = try swoir.createCircuit(manifest: manifest)
         let inputs = [
-            "preimage": Data("Hello, world!".utf8),
-            "hash": Data.fromHex("0xb6e16d27ac5ab427a7f68900ac5559ce272dc6c37c82b3e052246c82244c50e4") ]
+            "preimage": Data("Hello, world!".utf8).map({ $0 as UInt8 }),
+            "hash": Data.fromHex("0xb6e16d27ac5ab427a7f68900ac5559ce272dc6c37c82b3e052246c82244c50e4").map({ $0 as UInt8 })
+        ]
         let proof = try circuit.prove(inputs)
         let verified = try circuit.verify(proof)
         XCTAssertTrue(verified, "Failed to verify proof")
@@ -51,7 +52,56 @@ final class SwoirTests: XCTestCase {
         let swoir = Swoir(backend: Swoirenberg.self)
         let manifest = Bundle.module.url(forResource: "count_letters.json", withExtension: nil)!
         let circuit = try swoir.createCircuit(manifest: manifest)
-        let inputs = [ "words": Data("Hello, world!".utf8), "letter": Data("l".utf8)[0], "count": 3 ] as [String: Any]
+        let inputs = [ "words": Data("Hello, world!".utf8).map({ $0 as UInt8 }), "letter": Data("l".utf8)[0] as UInt8, "count": 3 ] as [String: Any]
+        let proof = try circuit.prove(inputs)
+        let verified = try circuit.verify(proof)
+        XCTAssertTrue(verified, "Failed to verify proof")
+    }
+
+    func testProveVerifySuccess_struct() throws {
+        let swoir = Swoir(backend: Swoirenberg.self)
+        let manifest = Bundle.module.url(forResource: "struct.json", withExtension: nil)!
+        let circuit = try swoir.createCircuit(manifest: manifest)
+        let inputs: [String: Any] = [
+            "factors": [
+                "a": 2,
+                "b": 3
+            ],
+            "result": 6
+        ];
+        let proof = try circuit.prove(inputs)
+        let verified = try circuit.verify(proof)
+        XCTAssertTrue(verified, "Failed to verify proof")
+    }
+
+    func testProveVerifySuccess_string() throws {
+        let swoir = Swoir(backend: Swoirenberg.self)
+        let manifest = Bundle.module.url(forResource: "string.json", withExtension: nil)!
+        let circuit = try swoir.createCircuit(manifest: manifest)
+        let inputs = [ 
+            "a": "hello", 
+            "b": "world", 
+            "c" : ["hello", "world", "hello", "world", "hello", "world", "hello", "world", "hello", "world"]
+        ] as [String: Any]
+        let proof = try circuit.prove(inputs)
+        let verified = try circuit.verify(proof)
+        XCTAssertTrue(verified, "Failed to verify proof")
+    }
+    
+    func testProveVerifySuccess_multi_dimensions_array() throws {
+        let swoir = Swoir(backend: Swoirenberg.self)
+        let manifest = Bundle.module.url(forResource: "multi_dimensions_array.json", withExtension: nil)!
+        let circuit = try swoir.createCircuit(manifest: manifest)
+        let inputs = [
+            "a": [        
+                [1, 2, 3, 4, 5],
+                [6, 7, 8, 9, 10]
+            ],
+            "b": [
+                [11, 12, 13, 14, 15],
+                [16, 17, 18, 19, 20]
+            ]
+        ]
         let proof = try circuit.prove(inputs)
         let verified = try circuit.verify(proof)
         XCTAssertTrue(verified, "Failed to verify proof")
