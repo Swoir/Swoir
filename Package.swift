@@ -14,8 +14,8 @@ let package = Package(
             targets: ["Swoir"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/Swoir/SwoirCore.git", exact: "0.1.0"),
-        .package(url: "https://github.com/madztheo/Swoirenberg.git", exact: "0.30.0-4"),
+        .package(url: "https://github.com/madztheo/SwoirCore.git", exact: "0.2.0"),
+        .package(url: "https://github.com/madztheo/Swoirenberg.git", exact: "0.30.0-5"),
     ],
     targets: [
         .target(

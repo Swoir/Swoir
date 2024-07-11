@@ -42,14 +42,14 @@ public class Circuit {
         self.bytecode = bytecode
     }
 
-    public func prove(_ inputs: [String: Any]) throws -> Proof {
+    public func prove(_ inputs: [String: Any], proof_type: String) throws -> Proof {
         let witnessMap = try generateWitnessMap(inputs, self.manifest.abi.parameters)
-        let proof = try backend.prove(bytecode: self.bytecode, witnessMap: witnessMap)
+        let proof = try backend.prove(bytecode: self.bytecode, witnessMap: witnessMap, proof_type: proof_type)
         return proof
     }
 
-    public func verify(_ proof: Proof) throws -> Bool {
-        let verified = try backend.verify(bytecode: self.bytecode, proof: proof)
+    public func verify(_ proof: Proof, proof_type: String) throws -> Bool {
+        let verified = try backend.verify(bytecode: self.bytecode, proof: proof, proof_type: proof_type)
         return verified
     }
 
