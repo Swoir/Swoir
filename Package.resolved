@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/madztheo/Swoirenberg.git",
       "state" : {
-        "revision" : "7b978bb49c499510ccc4d06b64c4985d114c1fc4",
-        "version" : "0.30.0-5"
+        "revision" : "7659eaf1b931a590a035da313a53b695e2315c05",
+        "version" : "0.30.0-6"
       }
     }
   ],
