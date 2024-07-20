@@ -6,10 +6,12 @@ public typealias WitnessMapValue = Int64
 public struct CircuitManifest: Codable {
     let bytecode: String
     let abi: ABI
+    public let hash: UInt64
 
     enum CodingKeys: String, CodingKey {
         case bytecode = "bytecode"
         case abi = "abi"
+        case hash = "hash"
     }
 }
 
@@ -108,6 +110,7 @@ public enum SwoirError: Error {
     case circuitNotFound(String)
     case missingInput(String)
     case invalidInput(String)
+    case srsNotSetup(String)
     case general(String)
 }
 

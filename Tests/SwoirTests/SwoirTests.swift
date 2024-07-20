@@ -9,6 +9,8 @@ final class SwoirTests: XCTestCase {
         let swoir = Swoir(backend: Swoirenberg.self)
         let manifest = Bundle.module.url(forResource: "x_not_eq_y.json", withExtension: nil)!
         let circuit = try swoir.createCircuit(manifest: manifest)
+        try circuit.setupSrs()
+
         let inputs = [ "x": 1, "y": 2 ]
         // UltraPlonk
         var proof = try circuit.prove(inputs, proof_type: "plonk")
@@ -24,6 +26,8 @@ final class SwoirTests: XCTestCase {
         let swoir = Swoir(backend: Swoirenberg.self)
         let manifest = Bundle.module.url(forResource: "x_not_eq_y.json", withExtension: nil)!
         let circuit = try swoir.createCircuit(manifest: manifest)
+        try circuit.setupSrs()
+
         let inputs = [ "x": 1, "y": 1 ]
         // UltraPlonk
         XCTAssertThrowsError(try circuit.prove(inputs, proof_type: "plonk")) { error in
@@ -39,6 +43,8 @@ final class SwoirTests: XCTestCase {
         let swoir = Swoir(backend: Swoirenberg.self)
         let manifest = Bundle.module.url(forResource: "field_array.json", withExtension: nil)!
         let circuit = try swoir.createCircuit(manifest: manifest)
+        try circuit.setupSrs()
+
         let inputs = [ "x": [1, 2], "y": [1, 3] ]
         // UltraPlonk
         var proof = try circuit.prove(inputs, proof_type: "plonk")
@@ -54,6 +60,8 @@ final class SwoirTests: XCTestCase {
         let swoir = Swoir(Swoirenberg.self)
         let manifest = Bundle.module.url(forResource: "known_preimage.json", withExtension: nil)!
         let circuit = try swoir.createCircuit(manifest: manifest)
+        try circuit.setupSrs()
+
         let inputs = [
             "preimage": Data("Hello, world!".utf8).map({ $0 as UInt8 }),
             "hash": Data.fromHex("0xb6e16d27ac5ab427a7f68900ac5559ce272dc6c37c82b3e052246c82244c50e4").map({ $0 as UInt8 })
@@ -72,6 +80,8 @@ final class SwoirTests: XCTestCase {
         let swoir = Swoir(backend: Swoirenberg.self)
         let manifest = Bundle.module.url(forResource: "count_letters.json", withExtension: nil)!
         let circuit = try swoir.createCircuit(manifest: manifest)
+        try circuit.setupSrs()
+
         let inputs = [ "words": Data("Hello, world!".utf8).map({ $0 as UInt8 }), "letter": Data("l".utf8)[0] as UInt8, "count": 3 ] as [String: Any]
         // UltraPlonk
         var proof = try circuit.prove(inputs, proof_type: "plonk")
@@ -87,6 +97,8 @@ final class SwoirTests: XCTestCase {
         let swoir = Swoir(backend: Swoirenberg.self)
         let manifest = Bundle.module.url(forResource: "struct.json", withExtension: nil)!
         let circuit = try swoir.createCircuit(manifest: manifest)
+        try circuit.setupSrs()
+
         let inputs: [String: Any] = [
             "factors": [
                 "a": 2,
@@ -108,6 +120,8 @@ final class SwoirTests: XCTestCase {
         let swoir = Swoir(backend: Swoirenberg.self)
         let manifest = Bundle.module.url(forResource: "string.json", withExtension: nil)!
         let circuit = try swoir.createCircuit(manifest: manifest)
+        try circuit.setupSrs()
+
         let inputs = [ 
             "a": "hello", 
             "b": "world", 
@@ -127,6 +141,8 @@ final class SwoirTests: XCTestCase {
         let swoir = Swoir(backend: Swoirenberg.self)
         let manifest = Bundle.module.url(forResource: "multi_dimensions_array.json", withExtension: nil)!
         let circuit = try swoir.createCircuit(manifest: manifest)
+        try circuit.setupSrs()
+
         let inputs = [
             "a": [        
                 [1, 2, 3, 4, 5],

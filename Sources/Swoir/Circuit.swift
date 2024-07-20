@@ -15,6 +15,7 @@ public class Circuit {
     public var manifestData: Data
     public var manifestUrl: URL?
     public var bytecode: Data
+    public var num_points: UInt32 = 0
 
     public convenience init(backend: SwoirBackendProtocol.Type, manifest: Data) throws {
         do {
@@ -42,14 +43,24 @@ public class Circuit {
         self.bytecode = bytecode
     }
 
-    public func prove(_ inputs: [String: Any], proof_type: String, srs_path: String? = nil) throws -> Proof {
+    public func setupSrs(srs_path: String? = nil) throws {
+        num_points = try backend.setup_srs(bytecode: self.bytecode, srs_path: srs_path)
+    }
+
+    public func prove(_ inputs: [String: Any], proof_type: String) throws -> Proof {
+        if num_points == 0 {
+            throw SwoirError.srsNotSetup("SRS not setup. Call setupSrs() before proving.")
+        }
         let witnessMap = try generateWitnessMap(inputs, self.manifest.abi.parameters)
-        let proof = try backend.prove(bytecode: self.bytecode, witnessMap: witnessMap, proof_type: proof_type, srs_path: srs_path)
+        let proof = try backend.prove(bytecode: self.bytecode, witnessMap: witnessMap, proof_type: proof_type, num_points: num_points)
         return proof
     }
 
-    public func verify(_ proof: Proof, proof_type: String, srs_path: String? = nil) throws -> Bool {
-        let verified = try backend.verify(bytecode: self.bytecode, proof: proof, proof_type: proof_type, srs_path: srs_path)
+    public func verify(_ proof: Proof, proof_type: String) throws -> Bool {
+        if num_points == 0 {
+            throw SwoirError.srsNotSetup("SRS not setup. Call setupSrs() before verifying.")
+        }
+        let verified = try backend.verify(bytecode: self.bytecode, proof: proof, proof_type: proof_type, num_points: num_points)
         return verified
     }
 
