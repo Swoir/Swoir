@@ -60,7 +60,7 @@ public class Circuit {
         if num_points == 0 {
             throw SwoirError.srsNotSetup("SRS not setup. Call setupSrs() before verifying.")
         }
-        let verified = try backend.verify(bytecode: self.bytecode, proof: proof, proof_type: proof_type, num_points: num_points)
+        let verified = try backend.verify(proof: proof, proof_type: proof_type, num_points: num_points)
         return verified
     }
 
