@@ -1,7 +1,7 @@
 # Swoir
 
-![Version](https://img.shields.io/badge/version-0.32.0--1-darkviolet)
-[![Noir](https://img.shields.io/badge/Noir-0.32.0--1-darkviolet)](https://github.com/AztecProtocol/aztec-packages/tree/master/noir)
+![Version](https://img.shields.io/badge/version-0.34.0--1-darkviolet)
+[![Noir](https://img.shields.io/badge/Noir-0.34.0--1-darkviolet)](https://github.com/AztecProtocol/aztec-packages/tree/master/noir)
 [![Swift 5](https://img.shields.io/badge/Swift-5-blue.svg)](https://developer.apple.com/swift/)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-green)](https://opensource.org/license/apache-2-0)
 
@@ -19,7 +19,7 @@ let package = Package(
     platforms: [ .macOS(.v10_15), .iOS(.v14) ],
     // ...
     dependencies: [
-        .package(url: "https://github.com/Swoir/Swoir.git", exact: "0.31.0-1")
+        .package(url: "https://github.com/Swoir/Swoir.git", exact: "0.34.0-1")
     ],
     // ...
     targets: [
@@ -39,8 +39,17 @@ let swoir = Swoir(backend: Swoirenberg.self)
 let manifest = URL(fileURLWithPath: "x_not_eq_y.json")
 let circuit = try swoir.createCircuit(manifest: manifest)
 
-let proof = try circuit.prove([ "x": 1, "y": 2 ])
-let verified = try circuit.verify(proof)
+// Setup the SRS for the circuit
+// Must be called before proving or verifying
+try circuit.setupSrs()
+
+// UltraPlonk
+let proof = try circuit.prove([ "x": 1, "y": 2 ], proof_type: "plonk")
+let verified = try circuit.verify(proof, proof_type: "plonk")
+
+// Honk
+let proof = try circuit.prove([ "x": 1, "y": 2 ], proof_type: "honk")
+let verified = try circuit.verify(proof, proof_type: "honk")
 
 print(verified ? "Verified!" : "Failed to verify")
 ```
@@ -55,6 +64,7 @@ Ensure [x_not_eq_y.json](./Tests/SwoirTests/Fixtures/contracts/x_not_eq_y/target
 ## Authors
 
 - [Michael Elliot](https://x.com/michaelelliot)
+- [Théo Madzou](https://x.com/madztheo)
 
 ## Contributing
 
