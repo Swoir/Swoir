@@ -9,3 +9,4 @@
 *.so
 *.zip
 *.bak
+.swiftpm
