@@ -1,7 +1,7 @@
 # Swoir
 
-![Version](https://img.shields.io/badge/version-0.36.0--2-darkviolet)
-[![Noir](https://img.shields.io/badge/Noir-0.36.0--2-darkviolet)](https://github.com/AztecProtocol/aztec-packages/tree/master/noir)
+![Version](https://img.shields.io/badge/version-0.36.0--3-darkviolet)
+[![Noir](https://img.shields.io/badge/Noir-0.36.0--3-darkviolet)](https://github.com/AztecProtocol/aztec-packages/tree/master/noir)
 [![Swift 5](https://img.shields.io/badge/Swift-5-blue.svg)](https://developer.apple.com/swift/)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-green)](https://opensource.org/license/apache-2-0)
 
@@ -19,7 +19,7 @@ let package = Package(
     platforms: [ .macOS(.v10_15), .iOS(.v14) ],
     // ...
     dependencies: [
-        .package(url: "https://github.com/Swoir/Swoir.git", exact: "0.36.0-2")
+        .package(url: "https://github.com/Swoir/Swoir.git", exact: "0.36.0-3")
     ],
     // ...
     targets: [
