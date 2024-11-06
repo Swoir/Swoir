@@ -6,7 +6,7 @@ let package = Package(
     name: "Swoir",
     platforms: [
         .macOS(.v10_15),
-        .iOS(.v14),
+        .iOS(.v15),
     ],
     products: [
         .library(
@@ -15,7 +15,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/Swoir/SwoirCore.git", exact: "0.5.0"),
-        .package(url: "https://github.com/Swoir/Swoirenberg.git", exact: "0.36.0-3"),
+        .package(url: "https://github.com/Swoir/Swoirenberg.git", exact: "0.36.0-4"),
     ],
     targets: [
         .target(
