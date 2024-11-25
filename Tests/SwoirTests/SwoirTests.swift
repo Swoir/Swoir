@@ -11,7 +11,7 @@ final class SwoirTests: XCTestCase {
         let circuit = try swoir.createCircuit(manifest: manifest)
         try circuit.setupSrs()
 
-        let inputs = [ "x": 1, "y": 2 ]
+        let inputs = [ "x": "0x1", "y": "0x2" ]
         // UltraPlonk
         var proof = try circuit.prove(inputs, proof_type: "plonk")
         var verified = try circuit.verify(proof, proof_type: "plonk")

@@ -1,7 +1,7 @@
 import Foundation
 import SwoirCore
 
-public typealias WitnessMapValue = Int64
+public typealias WitnessMapValue = String
 
 public struct CircuitManifest: Codable {
     let bytecode: String

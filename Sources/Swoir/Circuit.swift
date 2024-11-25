@@ -65,15 +65,16 @@ public class Circuit {
     }
 
     func inputToWitnessMapValue(_ input: Any) -> WitnessMapValue? {
-        if let input = input as? Int         { return WitnessMapValue(input) }
-        else if let input = input as? Int8   { return WitnessMapValue(input) }
-        else if let input = input as? UInt8  { return WitnessMapValue(input) }
-        else if let input = input as? Int16  { return WitnessMapValue(input) }
+        if let input = input as? Int            { return WitnessMapValue(input) }
+        else if let input = input as? Int8     { return WitnessMapValue(input) }
+        else if let input = input as? UInt8   { return WitnessMapValue(input) }
+        else if let input = input as? Int16   { return WitnessMapValue(input) }
         else if let input = input as? UInt16 { return WitnessMapValue(input) }
-        else if let input = input as? Int32  { return WitnessMapValue(input) }
+        else if let input = input as? Int32   { return WitnessMapValue(input) }
         else if let input = input as? UInt32 { return WitnessMapValue(input) }
-        else if let input = input as? Int64  { return WitnessMapValue(input) }
+        else if let input = input as? Int64   { return WitnessMapValue(input) }
         else if let input = input as? UInt64 { return WitnessMapValue(input) }
+        else if let input = input as? String { return WitnessMapValue(input) }
         else { return nil }
     }
 
@@ -88,8 +89,9 @@ public class Circuit {
         else if let input = input as? [UInt32] { return input.map { WitnessMapValue($0) } }
         else if let input = input as? [Int64]  { return input.map { WitnessMapValue($0) } }
         else if let input = input as? [UInt64] { return input.map { WitnessMapValue($0) } }
+        else if let input = input as? [String] { return input.map { WitnessMapValue($0) } }
         else { return nil }
-    }
+    }  
 
     func flattenMultidimensionalArray(_ input: Any) -> [Any] {
         var flattened: [Any] = []
