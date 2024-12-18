@@ -43,24 +43,24 @@ public class Circuit {
         self.bytecode = bytecode
     }
 
-    public func setupSrs(srs_path: String? = nil) throws {
-        num_points = try backend.setup_srs(bytecode: self.bytecode, srs_path: srs_path)
+    public func setupSrs(srs_path: String? = nil, recursive: Bool = false) throws {
+        num_points = try backend.setup_srs(bytecode: self.bytecode, srs_path: srs_path, recursive: recursive)
     }
 
-    public func prove(_ inputs: [String: Any], proof_type: String) throws -> Proof {
+    public func prove(_ inputs: [String: Any], proof_type: String = "honk", recursive: Bool = false) throws -> Proof {
         if num_points == 0 {
             throw SwoirError.srsNotSetup("SRS not setup. Call setupSrs() before proving.")
         }
         let witnessMap = try generateWitnessMap(inputs, self.manifest.abi.parameters)
-        let proof = try backend.prove(bytecode: self.bytecode, witnessMap: witnessMap, proof_type: proof_type, num_points: num_points)
+        let proof = try backend.prove(bytecode: self.bytecode, witnessMap: witnessMap, proof_type: proof_type, recursive: recursive)
         return proof
     }
 
-    public func verify(_ proof: Proof, proof_type: String) throws -> Bool {
+    public func verify(_ proof: Proof, proof_type: String = "honk") throws -> Bool {
         if num_points == 0 {
             throw SwoirError.srsNotSetup("SRS not setup. Call setupSrs() before verifying.")
         }
-        let verified = try backend.verify(proof: proof, proof_type: proof_type, num_points: num_points)
+        let verified = try backend.verify(proof: proof, proof_type: proof_type)
         return verified
     }
 

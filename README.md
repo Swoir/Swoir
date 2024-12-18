@@ -1,7 +1,7 @@
 # Swoir
 
-![Version](https://img.shields.io/badge/version-0.36.0--5-darkviolet)
-[![Noir](https://img.shields.io/badge/Noir-0.36.0--5-darkviolet)](https://github.com/AztecProtocol/aztec-packages/tree/master/noir)
+![Version](https://img.shields.io/badge/version-1.0.0--beta.0--1-darkviolet)
+[![Noir](https://img.shields.io/badge/Noir-1.0.0--beta.0--1-darkviolet)](https://github.com/Swoir/Swoirenberg)
 [![Swift 5](https://img.shields.io/badge/Swift-5-blue.svg)](https://developer.apple.com/swift/)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-green)](https://opensource.org/license/apache-2-0)
 
@@ -19,7 +19,7 @@ let package = Package(
     platforms: [ .macOS(.v10_15), .iOS(.v15) ],
     // ...
     dependencies: [
-        .package(url: "https://github.com/Swoir/Swoir.git", exact: "0.36.0-5")
+        .package(url: "https://github.com/Swoir/Swoir.git", exact: "1.0.0-beta.0-1")
     ],
     // ...
     targets: [
@@ -43,13 +43,8 @@ let circuit = try swoir.createCircuit(manifest: manifest)
 // Must be called before proving or verifying
 try circuit.setupSrs()
 
-// UltraPlonk
-let proof = try circuit.prove([ "x": 1, "y": 2 ], proof_type: "plonk")
-let verified = try circuit.verify(proof, proof_type: "plonk")
-
-// Honk
-let proof = try circuit.prove([ "x": 1, "y": 2 ], proof_type: "honk")
-let verified = try circuit.verify(proof, proof_type: "honk")
+let proof = try circuit.prove([ "x": 1, "y": 2 ])
+let verified = try circuit.verify(proof)
 
 print(verified ? "Verified!" : "Failed to verify")
 ```

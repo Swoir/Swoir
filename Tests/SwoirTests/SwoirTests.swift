@@ -12,13 +12,9 @@ final class SwoirTests: XCTestCase {
         try circuit.setupSrs()
 
         let inputs = [ "x": "0x1", "y": "0x2" ]
-        // UltraPlonk
-        var proof = try circuit.prove(inputs, proof_type: "plonk")
-        var verified = try circuit.verify(proof, proof_type: "plonk")
-        XCTAssertTrue(verified, "Failed to verify UltraPlonk proof")
-        // Honk
-        proof = try circuit.prove(inputs, proof_type: "honk")
-        verified = try circuit.verify(proof, proof_type: "honk")
+
+        let proof = try circuit.prove(inputs)
+        let verified = try circuit.verify(proof)
         XCTAssertTrue(verified, "Failed to verify Honk proof")
     }
 
@@ -29,12 +25,8 @@ final class SwoirTests: XCTestCase {
         try circuit.setupSrs()
 
         let inputs = [ "x": 1, "y": 1 ]
-        // UltraPlonk
-        XCTAssertThrowsError(try circuit.prove(inputs, proof_type: "plonk")) { error in
-            XCTAssertEqual(error as? SwoirBackendError, .errorProving("Error generating proof"))
-        }
-        // Honk
-        XCTAssertThrowsError(try circuit.prove(inputs, proof_type: "honk")) { error in
+
+        XCTAssertThrowsError(try circuit.prove(inputs)) { error in
             XCTAssertEqual(error as? SwoirBackendError, .errorProving("Error generating proof"))
         }
     }
@@ -46,13 +38,9 @@ final class SwoirTests: XCTestCase {
         try circuit.setupSrs()
 
         let inputs = [ "x": [1, 2], "y": [1, 3] ]
-        // UltraPlonk
-        var proof = try circuit.prove(inputs, proof_type: "plonk")
-        var verified = try circuit.verify(proof, proof_type: "plonk")
-        XCTAssertTrue(verified, "Failed to verify UltraPlonk proof")
         // Honk
-        proof = try circuit.prove(inputs, proof_type: "honk")
-        verified = try circuit.verify(proof, proof_type: "honk")
+        let proof = try circuit.prove(inputs, proof_type: "honk")
+        let verified = try circuit.verify(proof, proof_type: "honk")
         XCTAssertTrue(verified, "Failed to verify Honk proof")
     }
 
@@ -66,13 +54,9 @@ final class SwoirTests: XCTestCase {
             "preimage": Data("Hello, world!".utf8).map({ $0 as UInt8 }),
             "hash": Data.fromHex("0xb6e16d27ac5ab427a7f68900ac5559ce272dc6c37c82b3e052246c82244c50e4").map({ $0 as UInt8 })
         ]
-        // UltraPlonk
-        var proof = try circuit.prove(inputs, proof_type: "plonk")
-        var verified = try circuit.verify(proof, proof_type: "plonk")
-        XCTAssertTrue(verified, "Failed to verify UltraPlonk proof")
         // Honk
-        proof = try circuit.prove(inputs, proof_type: "honk")
-        verified = try circuit.verify(proof, proof_type: "honk")
+        let proof = try circuit.prove(inputs)
+        let verified = try circuit.verify(proof)
         XCTAssertTrue(verified, "Failed to verify Honk proof")
     }
 
@@ -83,13 +67,9 @@ final class SwoirTests: XCTestCase {
         try circuit.setupSrs()
 
         let inputs = [ "words": Data("Hello, world!".utf8).map({ $0 as UInt8 }), "letter": Data("l".utf8)[0] as UInt8, "count": 3 ] as [String: Any]
-        // UltraPlonk
-        var proof = try circuit.prove(inputs, proof_type: "plonk")
-        var verified = try circuit.verify(proof, proof_type: "plonk")
-        XCTAssertTrue(verified, "Failed to verify UltraPlonk proof")
         // Honk
-        proof = try circuit.prove(inputs, proof_type: "honk")
-        verified = try circuit.verify(proof, proof_type: "honk")
+        let proof = try circuit.prove(inputs)
+        let verified = try circuit.verify(proof)
         XCTAssertTrue(verified, "Failed to verify Honk proof")
     }
 
@@ -106,13 +86,9 @@ final class SwoirTests: XCTestCase {
             ],
             "result": 6
         ];
-        // UltraPlonk
-        var proof = try circuit.prove(inputs, proof_type: "plonk")
-        var verified = try circuit.verify(proof, proof_type: "plonk")
-        XCTAssertTrue(verified, "Failed to verify UltraPlonk proof")
         // Honk
-        proof = try circuit.prove(inputs, proof_type: "honk")
-        verified = try circuit.verify(proof, proof_type: "honk")
+        let proof = try circuit.prove(inputs)
+        let verified = try circuit.verify(proof)
         XCTAssertTrue(verified, "Failed to verify Honk proof")
     }
 
@@ -127,13 +103,9 @@ final class SwoirTests: XCTestCase {
             "b": "world", 
             "c" : ["hello", "world", "hello", "world", "hello", "world", "hello", "world", "hello", "world"]
         ] as [String: Any]
-        // UltraPlonk
-        var proof = try circuit.prove(inputs, proof_type: "plonk")
-        var verified = try circuit.verify(proof, proof_type: "plonk")
-        XCTAssertTrue(verified, "Failed to verify UltraPlonk proof")
         // Honk
-        proof = try circuit.prove(inputs, proof_type: "honk")
-        verified = try circuit.verify(proof, proof_type: "honk")
+        let proof = try circuit.prove(inputs)
+        let verified = try circuit.verify(proof)
         XCTAssertTrue(verified, "Failed to verify Honk proof")
     }
     
@@ -153,13 +125,9 @@ final class SwoirTests: XCTestCase {
                 [16, 17, 18, 19, 20]
             ]
         ]
-        // UltraPlonk
-        var proof = try circuit.prove(inputs, proof_type: "plonk")
-        var verified = try circuit.verify(proof, proof_type: "plonk")
-        XCTAssertTrue(verified, "Failed to verify UltraPlonk proof")
         // Honk
-        proof = try circuit.prove(inputs, proof_type: "honk")
-        verified = try circuit.verify(proof, proof_type: "honk")
+        let proof = try circuit.prove(inputs)
+        let verified = try circuit.verify(proof)
         XCTAssertTrue(verified, "Failed to verify Honk proof")
     }
 }
