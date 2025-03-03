@@ -92,6 +92,23 @@ final class SwoirTests: XCTestCase {
         XCTAssertTrue(verified, "Failed to verify Honk proof")
     }
 
+    func testExecuteSuccess_struct() throws {
+        let swoir = Swoir(backend: Swoirenberg.self)
+        let manifest = Bundle.module.url(forResource: "struct.json", withExtension: nil)!
+        let circuit = try swoir.createCircuit(manifest: manifest)
+
+        let inputs: [String: Any] = [
+            "factors": [
+                "a": 2,
+                "b": 3
+            ],
+            "result": 6
+        ];
+
+        let solvedWitness = try circuit.execute(inputs)
+        XCTAssertEqual(solvedWitness, ["0x0000000000000000000000000000000000000000000000000000000000000002", "0x0000000000000000000000000000000000000000000000000000000000000003", "0x0000000000000000000000000000000000000000000000000000000000000006"])
+    }
+
     func testProveVerifySuccess_string() throws {
         let swoir = Swoir(backend: Swoirenberg.self)
         let manifest = Bundle.module.url(forResource: "string.json", withExtension: nil)!

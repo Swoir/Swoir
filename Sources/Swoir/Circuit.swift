@@ -47,6 +47,12 @@ public class Circuit {
         num_points = try backend.setup_srs(bytecode: self.bytecode, srs_path: srs_path, recursive: recursive)
     }
 
+    public func execute(_ inputs: [String: Any]) throws -> [String] {
+        let witnessMap = try generateWitnessMap(inputs, self.manifest.abi.parameters)
+        let solvedWitness = try backend.execute(bytecode: self.bytecode, witnessMap: witnessMap)
+        return solvedWitness
+    }
+
     public func prove(_ inputs: [String: Any], proof_type: String = "honk", recursive: Bool = false) throws -> Proof {
         if num_points == 0 {
             throw SwoirError.srsNotSetup("SRS not setup. Call setupSrs() before proving.")
