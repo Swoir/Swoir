@@ -16,24 +16,26 @@ public class Circuit {
     public var manifestUrl: URL?
     public var bytecode: Data
     public var num_points: UInt32 = 0
+    public var size: UInt32? = nil
+    public var recursive: Bool = false
 
-    public convenience init(backend: SwoirBackendProtocol.Type, manifest: Data) throws {
+    public convenience init(backend: SwoirBackendProtocol.Type, manifest: Data, size: UInt32? = nil, recursive: Bool = false) throws {
         do {
-            try self.init(backend: backend, manifestData: manifest)
+            try self.init(backend: backend, manifestData: manifest, size: size, recursive: recursive)
         } catch {
             throw SwoirError.errorLoadingManifest(error.localizedDescription)
         }
     }
-    public convenience init(backend: SwoirBackendProtocol.Type, manifest: URL) throws {
+    public convenience init(backend: SwoirBackendProtocol.Type, manifest: URL, size: UInt32? = nil, recursive: Bool = false) throws {
         do {
             let data = try Data(contentsOf: manifest)
-            try self.init(backend: backend, manifestData: data)
+            try self.init(backend: backend, manifestData: data, size: size, recursive: recursive)
             self.manifestUrl = manifest
         } catch {
             throw SwoirError.errorLoadingManifest(error.localizedDescription)
         }
     }
-    public init(backend: SwoirBackendProtocol.Type, manifestData: Data) throws {
+    public init(backend: SwoirBackendProtocol.Type, manifestData: Data, size: UInt32? = nil, recursive: Bool = false) throws {
         self.backend = backend
         self.manifest = try parseCircuit(data: manifestData)
         self.manifestData = manifestData
@@ -41,10 +43,16 @@ public class Circuit {
             throw SwoirError.errorLoadingManifest("Invalid base64 ACIR bytecode in manifest")
         }
         self.bytecode = bytecode
+        self.size = size
+        self.recursive = recursive
     }
 
-    public func setupSrs(srs_path: String? = nil, recursive: Bool = false) throws {
-        num_points = try backend.setup_srs(bytecode: self.bytecode, srs_path: srs_path, recursive: recursive)
+    public func setupSrs(srs_path: String? = nil) throws {
+        if let size = self.size {
+            num_points = try backend.setup_srs(circuit_size: size, srs_path: srs_path)
+        } else {
+            num_points = try backend.setup_srs_from_bytecode(bytecode: self.bytecode, srs_path: srs_path, recursive: self.recursive)
+        }
     }
 
     public func execute(_ inputs: [String: Any]) throws -> [String] {
@@ -53,21 +61,29 @@ public class Circuit {
         return solvedWitness
     }
 
-    public func prove(_ inputs: [String: Any], proof_type: String = "honk", recursive: Bool = false) throws -> Proof {
+    public func prove(_ inputs: [String: Any], proof_type: String = "honk") throws -> Data {
         if num_points == 0 {
             throw SwoirError.srsNotSetup("SRS not setup. Call setupSrs() before proving.")
         }
         let witnessMap = try generateWitnessMap(inputs, self.manifest.abi.parameters)
-        let proof = try backend.prove(bytecode: self.bytecode, witnessMap: witnessMap, proof_type: proof_type, recursive: recursive)
+        let proof = try backend.prove(bytecode: self.bytecode, witnessMap: witnessMap, proof_type: proof_type, recursive: self.recursive)
         return proof
     }
 
-    public func verify(_ proof: Proof, proof_type: String = "honk") throws -> Bool {
+    public func verify(_ proof: Data, vkey: Data? = nil, proof_type: String = "honk") throws -> Bool {
+        var verification_key: Data? = vkey
+        if verification_key == nil {
+            verification_key = try backend.get_verification_key(bytecode: self.bytecode, recursive: self.recursive)
+        }
         if num_points == 0 {
             throw SwoirError.srsNotSetup("SRS not setup. Call setupSrs() before verifying.")
         }
-        let verified = try backend.verify(proof: proof, proof_type: proof_type)
+        let verified = try backend.verify(proof: proof, vkey: verification_key!, proof_type: proof_type)
         return verified
+    }
+
+    public func getVerificationKey() throws -> Data {
+        return try backend.get_verification_key(bytecode: self.bytecode, recursive: self.recursive)
     }
 
     func inputToWitnessMapValue(_ input: Any) -> WitnessMapValue? {

@@ -126,13 +126,13 @@ public class Swoir {
         self.backend = backend
     }
 
-    public func createCircuit(manifest url: URL) throws -> Circuit {
-        let circuit = try Circuit(backend: self.backend, manifest: url)
+    public func createCircuit(manifest url: URL, size: UInt32? = nil, recursive: Bool = false) throws -> Circuit {
+        let circuit = try Circuit(backend: self.backend, manifest: url, size: size, recursive: recursive)
         return circuit
     }
 
-    public func createCircuit(manifest data: Data) throws -> Circuit {
-        let circuit = try Circuit(backend: self.backend, manifest: data)
+    public func createCircuit(manifest data: Data, size: UInt32? = nil, recursive: Bool = false) throws -> Circuit {
+        let circuit = try Circuit(backend: self.backend, manifest: data, size: size, recursive: recursive)
         return circuit
     }
 }

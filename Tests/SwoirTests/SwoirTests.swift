@@ -8,13 +8,13 @@ final class SwoirTests: XCTestCase {
     func testProveVerifySuccess_x_not_eq_y() throws {
         let swoir = Swoir(backend: Swoirenberg.self)
         let manifest = Bundle.module.url(forResource: "x_not_eq_y.json", withExtension: nil)!
-        let circuit = try swoir.createCircuit(manifest: manifest)
+        let circuit = try swoir.createCircuit(manifest: manifest, size: 40, recursive: true)
         try circuit.setupSrs()
 
         let inputs = [ "x": "0x1", "y": "0x2" ]
-
+        let vkey = try circuit.getVerificationKey()
         let proof = try circuit.prove(inputs)
-        let verified = try circuit.verify(proof)
+        let verified = try circuit.verify(proof, vkey: vkey)
         XCTAssertTrue(verified, "Failed to verify Honk proof")
     }
 
