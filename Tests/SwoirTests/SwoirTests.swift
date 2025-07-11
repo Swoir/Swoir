@@ -7,8 +7,8 @@ final class SwoirTests: XCTestCase {
 
     func testProveVerifySuccess_x_not_eq_y() throws {
         let swoir = Swoir(backend: Swoirenberg.self)
-        let manifest = Bundle.module.url(forResource: "x_not_eq_y.json", withExtension: nil)!
-        let circuit = try swoir.createCircuit(manifest: manifest, size: 40, recursive: true)
+        let manifest = Bundle.module.url(forResource: "x_not_eq_y", withExtension: "json")!
+        let circuit = try swoir.createCircuit(manifest: manifest, size: 4096)
         try circuit.setupSrs()
 
         let inputs = [ "x": "0x1", "y": "0x2" ]
@@ -20,7 +20,7 @@ final class SwoirTests: XCTestCase {
 
     func testProveFail_x_not_eq_y() throws {
         let swoir = Swoir(backend: Swoirenberg.self)
-        let manifest = Bundle.module.url(forResource: "x_not_eq_y.json", withExtension: nil)!
+        let manifest = Bundle.module.url(forResource: "x_not_eq_y", withExtension: "json")!
         let circuit = try swoir.createCircuit(manifest: manifest)
         try circuit.setupSrs()
 
@@ -33,20 +33,20 @@ final class SwoirTests: XCTestCase {
 
     func testProveVerifySuccess_field_array() throws {
         let swoir = Swoir(backend: Swoirenberg.self)
-        let manifest = Bundle.module.url(forResource: "field_array.json", withExtension: nil)!
+        let manifest = Bundle.module.url(forResource: "field_array", withExtension: "json")!
         let circuit = try swoir.createCircuit(manifest: manifest)
         try circuit.setupSrs()
 
         let inputs = [ "x": [1, 2], "y": [1, 3] ]
-        // Honk
-        let proof = try circuit.prove(inputs, proof_type: "honk")
-        let verified = try circuit.verify(proof, proof_type: "honk")
-        XCTAssertTrue(verified, "Failed to verify Honk proof")
+        // Ultra Honk
+        let proof = try circuit.prove(inputs, proof_type: "ultra_honk")
+        let verified = try circuit.verify(proof, proof_type: "ultra_honk")
+        XCTAssertTrue(verified, "Failed to verify Ultra Honk proof")
     }
 
     func testProveVerifySuccess_known_preimage() throws {
         let swoir = Swoir(Swoirenberg.self)
-        let manifest = Bundle.module.url(forResource: "known_preimage.json", withExtension: nil)!
+        let manifest = Bundle.module.url(forResource: "known_preimage", withExtension: "json")!
         let circuit = try swoir.createCircuit(manifest: manifest)
         try circuit.setupSrs()
 
@@ -62,7 +62,7 @@ final class SwoirTests: XCTestCase {
 
     func testProveVerifySuccess_count_letters() throws {
         let swoir = Swoir(backend: Swoirenberg.self)
-        let manifest = Bundle.module.url(forResource: "count_letters.json", withExtension: nil)!
+        let manifest = Bundle.module.url(forResource: "count_letters", withExtension: "json")!
         let circuit = try swoir.createCircuit(manifest: manifest)
         try circuit.setupSrs()
 
@@ -75,7 +75,7 @@ final class SwoirTests: XCTestCase {
 
     func testProveVerifySuccess_struct() throws {
         let swoir = Swoir(backend: Swoirenberg.self)
-        let manifest = Bundle.module.url(forResource: "struct.json", withExtension: nil)!
+        let manifest = Bundle.module.url(forResource: "struct", withExtension: "json")!
         let circuit = try swoir.createCircuit(manifest: manifest)
         try circuit.setupSrs()
 
@@ -94,7 +94,7 @@ final class SwoirTests: XCTestCase {
 
     func testExecuteSuccess_struct() throws {
         let swoir = Swoir(backend: Swoirenberg.self)
-        let manifest = Bundle.module.url(forResource: "struct.json", withExtension: nil)!
+        let manifest = Bundle.module.url(forResource: "struct", withExtension: "json")!
         let circuit = try swoir.createCircuit(manifest: manifest)
 
         let inputs: [String: Any] = [
@@ -111,7 +111,7 @@ final class SwoirTests: XCTestCase {
 
     func testProveVerifySuccess_string() throws {
         let swoir = Swoir(backend: Swoirenberg.self)
-        let manifest = Bundle.module.url(forResource: "string.json", withExtension: nil)!
+        let manifest = Bundle.module.url(forResource: "string", withExtension: "json")!
         let circuit = try swoir.createCircuit(manifest: manifest)
         try circuit.setupSrs()
 
@@ -128,7 +128,7 @@ final class SwoirTests: XCTestCase {
     
     func testProveVerifySuccess_multi_dimensions_array() throws {
         let swoir = Swoir(backend: Swoirenberg.self)
-        let manifest = Bundle.module.url(forResource: "multi_dimensions_array.json", withExtension: nil)!
+        let manifest = Bundle.module.url(forResource: "multi_dimensions_array", withExtension: "json")!
         let circuit = try swoir.createCircuit(manifest: manifest)
         try circuit.setupSrs()
 

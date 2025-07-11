@@ -17,25 +17,24 @@ public class Circuit {
     public var bytecode: Data
     public var num_points: UInt32 = 0
     public var size: UInt32? = nil
-    public var recursive: Bool = false
 
-    public convenience init(backend: SwoirBackendProtocol.Type, manifest: Data, size: UInt32? = nil, recursive: Bool = false) throws {
+    public convenience init(backend: SwoirBackendProtocol.Type, manifest: Data, size: UInt32? = nil) throws {
         do {
-            try self.init(backend: backend, manifestData: manifest, size: size, recursive: recursive)
+            try self.init(backend: backend, manifestData: manifest, size: size)
         } catch {
             throw SwoirError.errorLoadingManifest(error.localizedDescription)
         }
     }
-    public convenience init(backend: SwoirBackendProtocol.Type, manifest: URL, size: UInt32? = nil, recursive: Bool = false) throws {
+    public convenience init(backend: SwoirBackendProtocol.Type, manifest: URL, size: UInt32? = nil) throws {
         do {
             let data = try Data(contentsOf: manifest)
-            try self.init(backend: backend, manifestData: data, size: size, recursive: recursive)
+            try self.init(backend: backend, manifestData: data, size: size)
             self.manifestUrl = manifest
         } catch {
             throw SwoirError.errorLoadingManifest(error.localizedDescription)
         }
     }
-    public init(backend: SwoirBackendProtocol.Type, manifestData: Data, size: UInt32? = nil, recursive: Bool = false) throws {
+    public init(backend: SwoirBackendProtocol.Type, manifestData: Data, size: UInt32? = nil) throws {
         self.backend = backend
         self.manifest = try parseCircuit(data: manifestData)
         self.manifestData = manifestData
@@ -44,14 +43,13 @@ public class Circuit {
         }
         self.bytecode = bytecode
         self.size = size
-        self.recursive = recursive
     }
 
     public func setupSrs(srs_path: String? = nil) throws {
         if let size = self.size {
             num_points = try backend.setup_srs(circuit_size: size, srs_path: srs_path)
         } else {
-            num_points = try backend.setup_srs_from_bytecode(bytecode: self.bytecode, srs_path: srs_path, recursive: self.recursive)
+            num_points = try backend.setup_srs_from_bytecode(bytecode: self.bytecode, srs_path: srs_path)
         }
     }
 
@@ -61,19 +59,23 @@ public class Circuit {
         return solvedWitness
     }
 
-    public func prove(_ inputs: [String: Any], proof_type: String = "honk") throws -> Data {
+    public func prove(_ inputs: [String: Any], proof_type: String = "ultra_honk", vkey: Data? = nil) throws -> Data {
         if num_points == 0 {
             throw SwoirError.srsNotSetup("SRS not setup. Call setupSrs() before proving.")
         }
+        var verification_key: Data? = vkey
+        if verification_key == nil {
+            verification_key = try backend.get_verification_key(bytecode: self.bytecode, proof_type: proof_type)
+        }
         let witnessMap = try generateWitnessMap(inputs, self.manifest.abi.parameters)
-        let proof = try backend.prove(bytecode: self.bytecode, witnessMap: witnessMap, proof_type: proof_type, recursive: self.recursive)
+        let proof = try backend.prove(bytecode: self.bytecode, witnessMap: witnessMap, proof_type: proof_type, vkey: verification_key!)
         return proof
     }
 
-    public func verify(_ proof: Data, vkey: Data? = nil, proof_type: String = "honk") throws -> Bool {
+    public func verify(_ proof: Data, vkey: Data? = nil, proof_type: String = "ultra_honk") throws -> Bool {
         var verification_key: Data? = vkey
         if verification_key == nil {
-            verification_key = try backend.get_verification_key(bytecode: self.bytecode, recursive: self.recursive)
+            verification_key = try backend.get_verification_key(bytecode: self.bytecode, proof_type: proof_type)
         }
         if num_points == 0 {
             throw SwoirError.srsNotSetup("SRS not setup. Call setupSrs() before verifying.")
@@ -82,8 +84,8 @@ public class Circuit {
         return verified
     }
 
-    public func getVerificationKey() throws -> Data {
-        return try backend.get_verification_key(bytecode: self.bytecode, recursive: self.recursive)
+    public func getVerificationKey(proof_type: String = "ultra_honk") throws -> Data {
+        return try backend.get_verification_key(bytecode: self.bytecode, proof_type: proof_type)
     }
 
     func inputToWitnessMapValue(_ input: Any) -> WitnessMapValue? {

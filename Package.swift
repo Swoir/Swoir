@@ -1,11 +1,11 @@
-// swift-tools-version: 5.6
+// swift-tools-version: 5.7
 
 import PackageDescription
 
 let package = Package(
     name: "Swoir",
     platforms: [
-        .macOS(.v10_15),
+        .macOS(.v13),
         .iOS(.v15),
     ],
     products: [
@@ -14,8 +14,8 @@ let package = Package(
             targets: ["Swoir"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/Swoir/SwoirCore.git", exact: "0.8.0"),
-        .package(url: "https://github.com/Swoir/Swoirenberg.git", exact: "1.0.0-beta.3-4"),
+        .package(url: "https://github.com/Swoir/SwoirCore.git", exact: "0.9.0"),
+        .package(url: "https://github.com/Swoir/Swoirenberg.git", exact: "1.0.0-beta.7-1"),
     ],
     targets: [
         .target(
@@ -35,7 +35,7 @@ let package = Package(
                 "Fixtures/contracts/count_letters/src/main.nr",
                 "Fixtures/contracts/struct/Nargo.toml",
                 "Fixtures/contracts/struct/src/main.nr",
-                "Fixtures/contracts/string/src/string.nr",
+                "Fixtures/contracts/string/src/main.nr",
                 "Fixtures/contracts/string/Nargo.toml",
                 "Fixtures/contracts/multi-dimensions-array/src/main.nr",
                 "Fixtures/contracts/multi-dimensions-array/Nargo.toml",],

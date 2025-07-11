@@ -6,13 +6,28 @@ public typealias WitnessMapValue = String
 public struct CircuitManifest: Codable {
     let bytecode: String
     let abi: ABI
-    public let hash: UInt64
+    public let hash: String
+    let noir_version: String?
+    let debug_symbols: String?
+    let file_map: [String: FileMapEntry]?
+    let names: [String]?
+    let brillig_names: [String]?
 
     enum CodingKeys: String, CodingKey {
         case bytecode = "bytecode"
         case abi = "abi"
         case hash = "hash"
+        case noir_version = "noir_version"
+        case debug_symbols = "debug_symbols"
+        case file_map = "file_map"
+        case names = "names"
+        case brillig_names = "brillig_names"
     }
+}
+
+public struct FileMapEntry: Codable {
+    let source: String
+    let path: String
 }
 
 public struct ABI: Codable {
@@ -126,13 +141,13 @@ public class Swoir {
         self.backend = backend
     }
 
-    public func createCircuit(manifest url: URL, size: UInt32? = nil, recursive: Bool = false) throws -> Circuit {
-        let circuit = try Circuit(backend: self.backend, manifest: url, size: size, recursive: recursive)
+    public func createCircuit(manifest url: URL, size: UInt32? = nil) throws -> Circuit {
+        let circuit = try Circuit(backend: self.backend, manifest: url, size: size)
         return circuit
     }
 
-    public func createCircuit(manifest data: Data, size: UInt32? = nil, recursive: Bool = false) throws -> Circuit {
-        let circuit = try Circuit(backend: self.backend, manifest: data, size: size, recursive: recursive)
+    public func createCircuit(manifest data: Data, size: UInt32? = nil) throws -> Circuit {
+        let circuit = try Circuit(backend: self.backend, manifest: data, size: size)
         return circuit
     }
 }
