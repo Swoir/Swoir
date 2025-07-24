@@ -17,25 +17,25 @@ public class Circuit {
     public var bytecode: Data
     public var num_points: UInt32 = 0
     public var size: UInt32? = nil
-    public var low_memory_mode: Bool = false
+    public var lowMemoryMode: Bool = false
 
-    public convenience init(backend: SwoirBackendProtocol.Type, manifest: Data, size: UInt32? = nil, low_memory_mode: Bool = false) throws {
+    public convenience init(backend: SwoirBackendProtocol.Type, manifest: Data, size: UInt32? = nil, lowMemoryMode: Bool = false) throws {
         do {
-            try self.init(backend: backend, manifestData: manifest, size: size, low_memory_mode: low_memory_mode)
+            try self.init(backend: backend, manifestData: manifest, size: size, lowMemoryMode: lowMemoryMode)
         } catch {
             throw SwoirError.errorLoadingManifest(error.localizedDescription)
         }
     }
-    public convenience init(backend: SwoirBackendProtocol.Type, manifest: URL, size: UInt32? = nil, low_memory_mode: Bool = false) throws {
+    public convenience init(backend: SwoirBackendProtocol.Type, manifest: URL, size: UInt32? = nil, lowMemoryMode: Bool = false) throws {
         do {
             let data = try Data(contentsOf: manifest)
-            try self.init(backend: backend, manifestData: data, size: size, low_memory_mode: low_memory_mode)
+            try self.init(backend: backend, manifestData: data, size: size, lowMemoryMode: lowMemoryMode)
             self.manifestUrl = manifest
         } catch {
             throw SwoirError.errorLoadingManifest(error.localizedDescription)
         }
     }
-    public init(backend: SwoirBackendProtocol.Type, manifestData: Data, size: UInt32? = nil, low_memory_mode: Bool = false) throws {
+    public init(backend: SwoirBackendProtocol.Type, manifestData: Data, size: UInt32? = nil, lowMemoryMode: Bool = false) throws {
         self.backend = backend
         self.manifest = try parseCircuit(data: manifestData)
         self.manifestData = manifestData
@@ -44,7 +44,7 @@ public class Circuit {
         }
         self.bytecode = bytecode
         self.size = size
-        self.low_memory_mode = low_memory_mode
+        self.lowMemoryMode = lowMemoryMode
     }
 
     public func setupSrs(srs_path: String? = nil) throws {
@@ -67,17 +67,17 @@ public class Circuit {
         }
         var verification_key: Data? = vkey
         if verification_key == nil {
-            verification_key = try backend.get_verification_key(bytecode: self.bytecode, proof_type: proof_type, low_memory_mode: self.low_memory_mode)
+            verification_key = try backend.get_verification_key(bytecode: self.bytecode, proof_type: proof_type, low_memory_mode: self.lowMemoryMode)
         }
         let witnessMap = try generateWitnessMap(inputs, self.manifest.abi.parameters)
-        let proof = try backend.prove(bytecode: self.bytecode, witnessMap: witnessMap, proof_type: proof_type, vkey: verification_key!, low_memory_mode: self.low_memory_mode)
+        let proof = try backend.prove(bytecode: self.bytecode, witnessMap: witnessMap, proof_type: proof_type, vkey: verification_key!, low_memory_mode: self.lowMemoryMode)
         return proof
     }
 
     public func verify(_ proof: Data, vkey: Data? = nil, proof_type: String = "ultra_honk") throws -> Bool {
         var verification_key: Data? = vkey
         if verification_key == nil {
-            verification_key = try backend.get_verification_key(bytecode: self.bytecode, proof_type: proof_type, low_memory_mode: self.low_memory_mode)
+            verification_key = try backend.get_verification_key(bytecode: self.bytecode, proof_type: proof_type, low_memory_mode: self.lowMemoryMode)
         }
         if num_points == 0 {
             throw SwoirError.srsNotSetup("SRS not setup. Call setupSrs() before verifying.")
@@ -87,7 +87,7 @@ public class Circuit {
     }
 
     public func getVerificationKey(proof_type: String = "ultra_honk") throws -> Data {
-        return try backend.get_verification_key(bytecode: self.bytecode, proof_type: proof_type, low_memory_mode: self.low_memory_mode)
+        return try backend.get_verification_key(bytecode: self.bytecode, proof_type: proof_type, low_memory_mode: self.lowMemoryMode)
     }
 
     func inputToWitnessMapValue(_ input: Any) -> WitnessMapValue? {
