@@ -34,7 +34,7 @@ final class SwoirTests: XCTestCase {
     func testProveVerifySuccess_field_array() throws {
         let swoir = Swoir(backend: Swoirenberg.self)
         let manifest = Bundle.module.url(forResource: "field_array", withExtension: "json")!
-        let circuit = try swoir.createCircuit(manifest: manifest)
+        let circuit = try swoir.createCircuit(manifest: manifest, size: 500)
         try circuit.setupSrs()
 
         let inputs = [ "x": [1, 2], "y": [1, 3] ]
@@ -63,7 +63,7 @@ final class SwoirTests: XCTestCase {
     func testProveVerifySuccess_count_letters() throws {
         let swoir = Swoir(backend: Swoirenberg.self)
         let manifest = Bundle.module.url(forResource: "count_letters", withExtension: "json")!
-        let circuit = try swoir.createCircuit(manifest: manifest)
+        let circuit = try swoir.createCircuit(manifest: manifest, size: 500)
         try circuit.setupSrs()
 
         let inputs = [ "words": Data("Hello, world!".utf8).map({ $0 as UInt8 }), "letter": Data("l".utf8)[0] as UInt8, "count": 3 ] as [String: Any]
@@ -76,7 +76,7 @@ final class SwoirTests: XCTestCase {
     func testProveVerifySuccess_struct() throws {
         let swoir = Swoir(backend: Swoirenberg.self)
         let manifest = Bundle.module.url(forResource: "struct", withExtension: "json")!
-        let circuit = try swoir.createCircuit(manifest: manifest)
+        let circuit = try swoir.createCircuit(manifest: manifest, size: 500)
         try circuit.setupSrs()
 
         let inputs: [String: Any] = [
@@ -112,7 +112,7 @@ final class SwoirTests: XCTestCase {
     func testProveVerifySuccess_string() throws {
         let swoir = Swoir(backend: Swoirenberg.self)
         let manifest = Bundle.module.url(forResource: "string", withExtension: "json")!
-        let circuit = try swoir.createCircuit(manifest: manifest)
+        let circuit = try swoir.createCircuit(manifest: manifest, size: 500)
         try circuit.setupSrs()
 
         let inputs = [ 
@@ -129,7 +129,7 @@ final class SwoirTests: XCTestCase {
     func testProveVerifySuccess_multi_dimensions_array() throws {
         let swoir = Swoir(backend: Swoirenberg.self)
         let manifest = Bundle.module.url(forResource: "multi_dimensions_array", withExtension: "json")!
-        let circuit = try swoir.createCircuit(manifest: manifest)
+        let circuit = try swoir.createCircuit(manifest: manifest, size: 500)
         try circuit.setupSrs()
 
         let inputs = [
