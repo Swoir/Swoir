@@ -135,6 +135,8 @@ public class Circuit {
 
     func computeTotalLengthOfArray(_ kind : ABI_ParameterType) -> Int {
         switch kind {
+        case .kindBoolean:
+            return 1
         case .kindArray(_, let length, let type):
             return length * computeTotalLengthOfArray(type)
         case .kindField:
@@ -158,37 +160,54 @@ public class Circuit {
 
             switch param.type {
             case .kindArray(_, let length, let type ):
-                // Make sure any extradimensions are flattened
-                let input = flattenMultidimensionalArray(input!)
-                // And then compute the expected length of the flattened array
-                let totalLength = computeTotalLengthOfArray(param.type)
                 switch type {
-                case .kindString(_, let string_length):
-                    // Convert each String in the array into a UInt8 array
-                    for element in input as! [String] {
-                        guard let elementData = element.data(using: .utf8)?.map({ $0 as UInt8 }) else {
-                            throw SwoirError.invalidInput("Failed to convert input \(param.name) to UTF-8 data.")
+                    case .kindStruct(_, _, let fields ):
+                        guard let input = input as? [[String: Any]] else {
+                            throw SwoirError.invalidInput("Input \(param.name) must be an array of structs.")
                         }
-                        guard let elementData = inputArrayToWitnessMapValue(elementData) else {
-                            throw SwoirError.invalidInput("Failed to convert input \(param.name) to WitnessMapValue.")
+                        for element in input {
+                            let fieldWitnessMap = try generateWitnessMap(element, fields)
+                            witnessMap.append(contentsOf: fieldWitnessMap)
                         }
-                        if elementData.count != string_length {
-                            throw SwoirError.invalidInput("Array length mismatch for input \(param.name). Input array length is \(elementData.count) but circuit expects \(length)")
+                    default:
+                        // Make sure any extradimensions are flattened
+                        let input = flattenMultidimensionalArray(input!)
+                        // And then compute the expected length of the flattened array
+                        let totalLength = computeTotalLengthOfArray(param.type)
+                        switch type {
+                        case .kindString(_, let string_length):
+                            // Convert each String in the array into a UInt8 array
+                            for element in input as! [String] {
+                                guard let elementData = element.data(using: .utf8)?.map({ $0 as UInt8 }) else {
+                                    throw SwoirError.invalidInput("Failed to convert input \(param.name) to UTF-8 data.")
+                                }
+                                guard let elementData = inputArrayToWitnessMapValue(elementData) else {
+                                    throw SwoirError.invalidInput("Failed to convert input \(param.name) to WitnessMapValue.")
+                                }
+                                if elementData.count != string_length {
+                                    throw SwoirError.invalidInput("Array length mismatch for input \(param.name). Input array length is \(elementData.count) but circuit expects \(length)")
+                                }
+                                witnessMap.append(contentsOf: elementData)
+                            }
+                        default:
+                            guard let inputArray = inputArrayToWitnessMapValue(input as Any) else {
+                                throw SwoirError.invalidInput("Invalid array type for input \(param.name).")
+                            }
+                            if inputArray.count != totalLength {
+                                throw SwoirError.invalidInput("Array length mismatch for input \(param.name). Input array length is \(inputArray.count) but circuit expects \(length)")
+                            }
+                            witnessMap.append(contentsOf: inputArray)
                         }
-                        witnessMap.append(contentsOf: elementData)
-                    }
-                default:
-                    guard let inputArray = inputArrayToWitnessMapValue(input as Any) else {
-                        throw SwoirError.invalidInput("Invalid array type for input \(param.name).")
-                    }
-                    if inputArray.count != totalLength {
-                        throw SwoirError.invalidInput("Array length mismatch for input \(param.name). Input array length is \(inputArray.count) but circuit expects \(length)")
-                    }
-                    witnessMap.append(contentsOf: inputArray)
                 }
             case .kindField:
                 guard let input = inputToWitnessMapValue(input as Any) else {
                     throw SwoirError.invalidInput("Input \(param.name) must be an integer.")
+                }
+                witnessMap.append(input)
+
+            case .kindBoolean:
+                guard let input = inputToWitnessMapValue(input as Any) else {
+                    throw SwoirError.invalidInput("Input \(param.name) must be a boolean.")
                 }
                 witnessMap.append(input)
 

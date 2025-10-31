@@ -56,6 +56,7 @@ public indirect enum ABI_ParameterType: Codable {
     case kindField(kind: String)
     case kindString(kind: String, length: Int)
     case kindStruct(kind: String, path: String, fields: [ABI_Parameter])
+    case kindBoolean(kind: String)
 
     enum CodingKeys: CodingKey {
         case kind, sign, width, length, type, fields, path
@@ -82,6 +83,8 @@ public indirect enum ABI_ParameterType: Codable {
             let path = try container.decode(String.self, forKey: .path)
             let fields =  try container.decode([ABI_Parameter].self, forKey: .fields)
             self = .kindStruct(kind: kind, path: path, fields: fields)
+        case "boolean":
+            self = .kindBoolean(kind: kind)
         default:
             throw DecodingError.dataCorruptedError(forKey: .kind, in: container, debugDescription: "Unknown kind")
         }
@@ -107,6 +110,8 @@ public indirect enum ABI_ParameterType: Codable {
             try container.encode(kind, forKey: .kind)
             try container.encode(fields, forKey: .fields)
             try container.encode(path, forKey: .path)
+        case .kindBoolean(let kind):
+            try container.encode(kind, forKey: .kind)
         }
     }
 }
@@ -117,6 +122,7 @@ public indirect enum Kind {
     case array(length: Int, type: ABI_ParameterType)
     case string(length: Int)
     case structType(fields: [ABI_Parameter])
+    case boolean
 }
 
 public enum SwoirError: Error {
