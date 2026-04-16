@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Swoir/Swoirenberg.git",
       "state" : {
-        "revision" : "65485cef0e6b6e0b36fcfd166ae367c142025dc8",
-        "version" : "1.0.0-beta.19-4"
+        "revision" : "6d48a2e9f9bede69df2c76686b3be9f8024daa89",
+        "version" : "1.0.0-beta.20-1"
       }
     }
   ],
