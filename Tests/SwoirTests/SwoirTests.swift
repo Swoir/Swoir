@@ -5,6 +5,16 @@ import Swoirenberg
 
 final class SwoirTests: XCTestCase {
 
+    // Barretenberg 5.x only honors the first SRS initialization of the process:
+    // later setup_srs calls requesting more points fail. All tests share one
+    // process, so initialize the SRS once, large enough for the biggest test
+    // circuit (known_preimage's keccak256, dyadic size 65536). The setupSrs()
+    // calls in individual tests then succeed as no-ops.
+    override class func setUp() {
+        super.setUp()
+        _ = try! Swoirenberg.setup_srs(circuit_size: 65536)
+    }
+
     func testProveVerifySuccess_x_not_eq_y() throws {
         let swoir = Swoir(backend: Swoirenberg.self)
         let manifest = Bundle.module.url(forResource: "x_not_eq_y", withExtension: "json")!
